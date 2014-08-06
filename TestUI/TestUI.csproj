@@ -104,10 +104,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Cards\Shared.csproj">
-      <Project>{CA716AB1-2DB4-4E8A-BF72-D4DFBE942272}</Project>
-      <Name>Shared</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Client\Client.csproj">
       <Project>{85198160-F3A8-4CBE-A3A8-C059CA876681}</Project>
       <Name>Client</Name>
@@ -115,6 +111,10 @@
     <ProjectReference Include="..\Server\Server.csproj">
       <Project>{C7B7F8D2-60B9-404A-A599-6215CAF1B27F}</Project>
       <Name>Server</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Shared\Shared.csproj">
+      <Project>{CA716AB1-2DB4-4E8A-BF72-D4DFBE942272}</Project>
+      <Name>Shared</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

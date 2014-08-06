@@ -1,9 +1,0 @@
-D:\$Personal\Projects\CardGame\Test\bin\Debug\Test.exe
-D:\$Personal\Projects\CardGame\Test\bin\Debug\Test.pdb
-D:\$Personal\Projects\CardGame\Test\obj\x86\Debug\ResolveAssemblyReference.cache
-D:\$Personal\Projects\CardGame\Test\obj\x86\Debug\Test.exe
-D:\$Personal\Projects\CardGame\Test\obj\x86\Debug\Test.pdb
-D:\$Personal\Projects\CardGame\Test\bin\Debug\Connection.dll
-D:\$Personal\Projects\CardGame\Test\bin\Debug\StartMenus.dll
-D:\$Personal\Projects\CardGame\Test\bin\Debug\Connection.pdb
-D:\$Personal\Projects\CardGame\Test\bin\Debug\StartMenus.pdb
