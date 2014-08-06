@@ -1,0 +1,9 @@
+D:\$Personal\Projects\CardGame\Client\bin\Debug\Client.dll
+D:\$Personal\Projects\CardGame\Client\bin\Debug\Client.pdb
+D:\$Personal\Projects\CardGame\Client\bin\Debug\Shared.dll
+D:\$Personal\Projects\CardGame\Client\bin\Debug\Shared.pdb
+D:\$Personal\Projects\CardGame\Client\obj\Debug\Client.dll
+D:\$Personal\Projects\CardGame\Client\obj\Debug\Client.pdb
+D:\$Personal\Projects\CardGame\Client\bin\Debug\NLog.dll
+D:\$Personal\Projects\CardGame\Client\bin\Debug\NLog.xml
+D:\$Personal\Projects\CardGame\Client\obj\Debug\Client.csprojResolveAssemblyReference.cache

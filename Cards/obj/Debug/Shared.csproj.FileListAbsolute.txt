@@ -1,0 +1,5 @@
+D:\$Personal\Projects\CardGame\Cards\bin\Debug\Shared.dll
+D:\$Personal\Projects\CardGame\Cards\bin\Debug\Shared.pdb
+D:\$Personal\Projects\CardGame\Cards\obj\Debug\Shared.dll
+D:\$Personal\Projects\CardGame\Cards\obj\Debug\Shared.pdb
+D:\$Personal\Projects\CardGame\Cards\obj\Debug\Shared.csprojResolveAssemblyReference.cache
