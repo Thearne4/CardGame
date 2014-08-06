@@ -13,7 +13,7 @@ namespace Server.BasicCardGame
         protected Deck Deck;
         public Player[] Players;
         private int[] score;
-        private List<Dictionary<Card, Player>> _history;
+        protected Dictionary<Dictionary<Card, Player>, Player> _history; // Played hand as dictionary + winner of hand
 
         private int _currentDealer;
         private int currentPlayer;
@@ -128,8 +128,8 @@ namespace Server.BasicCardGame
             if (Players[CurrentPlayer] != player) throw new ArgumentException("It is not this player's turn!", "player");
             if (!Players[CurrentPlayer].HasCard(card)) throw new ArgumentException("Player threw a card he's not supposed to have!", "card");
 
-            //Add to public hand
-            if(CurrentHand==null)CurrentHand=new Dictionary<Card, Player>();
+            //Add to public hand and history
+            if (CurrentHand == null) CurrentHand = new Dictionary<Card, Player>();
             CurrentHand.Add(card, player);
             AdvertisePlay(card, player);
 
@@ -158,12 +158,31 @@ namespace Server.BasicCardGame
             try
             {
                 if (HandDone != null) HandDone.Invoke(new HandDoneEventArgs(hand ?? CurrentHand, winningPlayer));
-                }
+            }
             catch (Exception exception)
             {
                 Logger.Error("Error letting players know what card was played", exception);
             }
             if (clearCurrentHand) CurrentHand.Clear();
+        }
+
+        protected void AdvertiseRoundOver(int[] scoresToAdd)
+        {
+            if (scoresToAdd.Length != Players.Length) throw new ArgumentOutOfRangeException("scoresToAdd", "Score Array isn't the same size as player array");
+
+            if (score == null) score = new int[Players.Length];
+
+            for (int iPlayer = 0; iPlayer < score.Length; iPlayer++)
+                score[iPlayer] += scoresToAdd[iPlayer];
+
+            try
+            {
+                if (RoundDone != null) RoundDone.Invoke(new RoundDoneEventArgs(Players, score, scoresToAdd));
+            }
+            catch (Exception exception)
+            {
+                Logger.Error("Problem reporting round over", exception);
+            }
         }
         #endregion
 
@@ -196,6 +215,24 @@ namespace Server.BasicCardGame
                 WinningPlayer = winningPlayer;
             }
         }
+
+        public event RoundDoneEventHandler RoundDone;
+        public delegate void RoundDoneEventHandler(RoundDoneEventArgs args);
+        public class RoundDoneEventArgs : EventArgs
+        {
+            public RoundDoneEventArgs(Player[] players, int[] scores, int[] pointTakenThisRound)
+            {
+                Players = players;
+                Scores = scores;
+                PointTakenThisRound = pointTakenThisRound;
+            }
+
+            public Player[] Players { get; private set; }
+            public int[] Scores { get; private set; }
+            public int[] PointTakenThisRound { get; private set; }
+        }
+
+
         #endregion
     }
 }
