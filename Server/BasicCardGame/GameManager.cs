@@ -25,9 +25,9 @@ namespace Server.BasicCardGame
         #region Properties
         public bool DoneDealing { get { return Deck.RemainingCardsInDeck == 0; } }
 
-        public int CurrentPlayer
+        public Player CurrentPlayer
         {
-            get { return currentPlayer; }
+            get { return Players[currentPlayer]; }
         }
 
         public int CurrentDealer
@@ -54,12 +54,36 @@ namespace Server.BasicCardGame
         protected GameManager(Player[] players, int? firstDealer = null)
         {
             Players = players;
+            foreach (var player in Players)
+            {
+                player.PropertyChanged += player_PropertyChanged;
+                player.PlayerWantsToPlayCard += player_PlayerWantsToPlayCard;
+            }
             score = new int[Players.Length];
+            Deck = new Deck();
             SetDealer(firstDealer);
             ResetGame();
         }
 
         #region Methods
+        private void player_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+        private bool player_PlayerWantsToPlayCard(object sender, Player.PlayerWantsToPlayCardEventArgs args)
+        {
+            try
+            {
+                PlayCard(sender as Player, args.Card);
+                return true;
+            }
+            catch (Exception exception)
+            {
+                Logger.Error("Failed to play card!", exception);
+            }
+            return false;
+        }
+
         #region Setup
         internal void ResetGame()
         {
@@ -71,7 +95,7 @@ namespace Server.BasicCardGame
         protected void ClearGame()
         {
             foreach (var gamer in Players) gamer.ClearCards();
-            _history = null;
+            _history = new Dictionary<Dictionary<Card, Player>, Player>();
             Deck.ResetDeck();
         }
         private void SetDealer(int? idInGamers = null)
@@ -86,7 +110,11 @@ namespace Server.BasicCardGame
             _currentDealer = nextDealer;
         }
 
-        public void DealEveryone(int? numCards = null, bool startAfterDealer = true)
+        public virtual void Deal()
+        {
+            DealEveryone();
+        }
+        protected void DealEveryone(int? numCards = null, bool startAfterDealer = true)
         {
             var maxCards = (int)Math.Floor((double)Deck.RemainingCardsInDeck / Players.Length);
             if (numCards != null && numCards > maxCards) throw new ArgumentOutOfRangeException("numCards");
@@ -115,7 +143,7 @@ namespace Server.BasicCardGame
 
         private void SetNextPlayerAsActive()
         {
-            int tmpCurrentPlayer = CurrentDealer + 1;
+            int tmpCurrentPlayer = currentPlayer + 1;
             if (tmpCurrentPlayer >= Players.Length) tmpCurrentPlayer = 0;
             currentPlayer = tmpCurrentPlayer;
         }
@@ -125,8 +153,8 @@ namespace Server.BasicCardGame
         public void PlayCard(Player player, Card card)
         {
             //Check if legal play
-            if (Players[CurrentPlayer] != player) throw new ArgumentException("It is not this player's turn!", "player");
-            if (!Players[CurrentPlayer].HasCard(card)) throw new ArgumentException("Player threw a card he's not supposed to have!", "card");
+            if (CurrentPlayer != player) throw new ArgumentException("It is not this player's turn!", "player");
+            if (!CurrentPlayer.HasCard(card)) throw new ArgumentException("Player threw a card he's not supposed to have!", "card");
 
             //Add to public hand and history
             if (CurrentHand == null) CurrentHand = new Dictionary<Card, Player>();
@@ -135,12 +163,12 @@ namespace Server.BasicCardGame
 
             //Checks and game progression
             CheckIfHandIsFinished();
-            CheckIfPlayIsFinished();
+            CheckIfRoundIsFinished();
             SetNextPlayerAsActive();
         }
 
         protected abstract void CheckIfHandIsFinished();
-        protected abstract void CheckIfPlayIsFinished();
+        protected abstract void CheckIfRoundIsFinished();
 
         private void AdvertisePlay(Card card, Player player)
         {
@@ -183,6 +211,14 @@ namespace Server.BasicCardGame
             {
                 Logger.Error("Problem reporting round over", exception);
             }
+
+            SetupNextRound();
+        }
+
+        protected virtual void SetupNextRound()
+        {
+            SetNextDealer();
+            Deck.ResetDeck();
         }
         #endregion
 

@@ -6,7 +6,7 @@ using Shared.Cards;
 
 namespace Server
 {
-    internal class HeartsManager : GameManager
+    public class HeartsManager : GameManager
     {
         public HeartsManager(Player[] players)
             : base(players)
@@ -29,16 +29,18 @@ namespace Server
             var possibleWinners = CurrentHand.Where(o => o.Key.CardSuit == firstcard.CardSuit);
             var winningPlayer = possibleWinners.OrderBy(o => o.Key.CardValue).First().Value;
 
-            var hand = CurrentHand.ToDictionary(player => player.Key, player => player.Value);
-            _history.Add(hand, winningPlayer);
+            //var hand = CurrentHand.ToDictionary(player => player.Key, player => player.Value);
+            _history.Add(CurrentHand, winningPlayer);
+            CurrentHand = new Dictionary<Card, Player>();
 
             AdvertiseWinningHand(winningPlayer);
         }
 
-        protected override void CheckIfPlayIsFinished()
+        protected override void CheckIfRoundIsFinished()
         {
-            if (Players.Any(player => player.CardsRemaining > 0)) return;
+            if (Players.Any(player => player.CardsRemaining > 1)) return; //cards only removed from player after this function evaluates
             if (CurrentHand != null && CurrentHand.Count > 0) return;
+            if(_history.Count<13)return;
 
             //round finished
             var scoresToAdd = new int[Players.Length];
@@ -55,5 +57,14 @@ namespace Server
 
             AdvertiseRoundOver(scoresToAdd);
         }
+
+        public override void Deal()
+        {
+            DealEveryone(4);
+            DealEveryone(5);
+            DealEveryone(4);
+        }
+
+
     }
 }

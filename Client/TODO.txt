@@ -1,0 +1,8 @@
+﻿- Client TCP connection
+- Client WPF view
+
+  - View own cards
+  - Protect against viewing other players cards (server side? / TCP encryption?)
+  - Allow viewing previous hand until next one is done (server event)
+  - Allow making plays only when active player (server event)
+

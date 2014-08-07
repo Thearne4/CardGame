@@ -26,15 +26,16 @@ namespace Shared.Cards
         }
         public enum Value : byte
         {
-            Ace = 0x1,
-            Two = 0x2,
-            Three = 0x3,
-            Four = 0x4,
-            Five = 0x5,
-            Six = 0x6,
-            Seven = 0x7,
-            Eight = 0x8,
-            Nine = 0x9,
+            Ace = 0x0,
+            Two = 0x1,
+            Three = 0x2,
+            Four = 0x3,
+            Five = 0x4,
+            Six = 0x5,
+            Seven = 0x6,
+            Eight = 0x7,
+            Nine = 0x8,
+            Ten = 0x9,
             Jack = 0xA,
             Queen = 0xB,
             King = 0xC
